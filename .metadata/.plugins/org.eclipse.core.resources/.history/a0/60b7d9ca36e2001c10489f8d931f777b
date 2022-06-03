@@ -1,0 +1,64 @@
+/*
+ * mpu_driver.c
+ *
+ *  Created on: 2022. 5. 31.
+ *      Author: keonyoung
+ */
+
+
+#include "mpu_driver.h"
+#include <math.h>
+
+MPU_obj himu;
+
+float roll = 0;
+float pitch = 0;
+float yaw = 0;
+float alpha = 0.98;
+
+static int32_t Driver_IOWait(uint16_t dev_addr, uint32_t timeout)
+{
+    return IOIF_I2C_WaitForI2C_Ready(dev_addr, timeout);
+}
+static int32_t Driver_IORegisterRx(uint16_t dev_addr, uint16_t reg_addr, uint8_t* rx, uint16_t size)
+{
+	return IOIF_I2C_RegisterRx(dev_addr, reg_addr, rx, size);
+}
+static int32_t Driver_IORegisterTx(uint16_t dev_addr, uint16_t reg_addr, uint8_t* rx, uint16_t size)
+{
+	return IOIF_I2C_RegisterTx(dev_addr, reg_addr, rx, size);
+}
+
+// can be called from freertos.c
+// seti2c + wait + configure
+void IMU_Init()
+{
+//    IOIF_I2C_InitChannel(&i2c_ch1, &hi2c1, semaphore);
+
+    MPU9250_IOctx ioctx = {
+        Driver_IOWait,
+        Driver_IORegisterRx,
+        Driver_IORegisterTx
+    };
+
+    // initialize himu with IOcontext
+    MPU9250_RegisterIOContext(&himu, &ioctx);
+
+    // seti2c + wait + configure -> seti2c no more use
+    MPU9250_Initialize(&himu);
+}
+// readdata + readbuffdata()
+void IMU_Run()
+{
+    MPU9250_ReadData(&himu);
+    MPU9250_ReadBuffData(&himu);
+	float totVec1 = sqrtf((float)(himu.acc[1]*himu.acc[1]/100+himu.acc[2]*himu.acc[2]/100))*10;
+	float totVec2 = sqrtf((float)(himu.acc[0]*himu.acc[0]/100+himu.acc[2]*himu.acc[2]/100))*10;
+
+	float rot1 = atan2(himu.acc[0], totVec1);
+	float rot2 = atan2(himu.acc[1], totVec2);
+
+	roll = alpha*(roll + (float)himu.gyr[0]*0.004*0.001)+(1-alpha)*rot1*180/3.141592;
+	pitch = alpha*(pitch + (float)himu.gyr[1]*0.004*0.001)+(1-alpha)*rot2*180/3.141592;
+    IOIF_WaitForASec(1);
+}

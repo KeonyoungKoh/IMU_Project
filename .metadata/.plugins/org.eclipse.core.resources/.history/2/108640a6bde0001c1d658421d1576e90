@@ -1,0 +1,50 @@
+/*
+ * mpu_driver.c
+ *
+ *  Created on: 2022. 5. 31.
+ *      Author: keonyoung
+ */
+
+
+#include "mpu_driver.h"
+
+MPU_obj himu;
+
+static void Driver_IOWait(uint16_t dev_addr, uint32_t timeout)
+{
+    IOIF_I2C_WaitForI2C_Ready(&i2c_ch1, dev_addr, timeout);
+}
+static void Driver_IORegisterRx(uint16_t dev_addr, uint16_t reg_addr, uint8_t* rx, uint16_t size)
+{
+    IOIF_I2C_RegisterRx(&i2c_ch1, dev_addr, reg_addr, rx, size);
+}
+static void Driver_IORegisterTx(uint16_t dev_addr, uint16_t reg_addr, uint8_t* rx, uint16_t size)
+{
+    IOIF_I2C_RegisterTx(&i2c_ch1, dev_addr, reg_addr, rx, size);
+}
+
+// can be called from freertos.c
+// seti2c + wait + configure
+void IMU_Init()
+{
+    IOIF_I2C_InitChannel(&i2c_ch1, &hi2c1, I2C1BinSemHandle);
+
+    MPU9250_IOctx ioctx = {
+        Driver_IOWait,
+        Driver_IORegisterRx,
+        Driver_IORegisterTx
+    };
+
+    // initialize himu with IOcontext
+    MPU9250_RegisterIOContext(&himu, &ioctx);
+
+    // seti2c + wait + configure -> seti2c no more use
+    MPU9250_Initialize(&himu);
+}
+// readdata + readbuffdata()
+void IMU_Run()
+{
+    MPU9250_ReadData();
+    MPU9250_ReadBuffData();
+    IOIF_WaitForASec(1);
+}

@@ -1,0 +1,20 @@
+17:40:57 **** Incremental Build of configuration Debug for project nucleo_test ****
+make -j4 all 
+arm-none-eabi-gcc "../Custom/Src/mpu9250.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H723xx -c -I../Core/Inc -I../Custom/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Custom/Src/mpu9250.d" -MT"Custom/Src/mpu9250.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Custom/Src/mpu9250.o"
+arm-none-eabi-gcc -o "nucleo_test.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\keonyoung\Desktop\IMU_Project\nucleo_test\STM32H723ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nucleo_test.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: nucleo_test.elf
+ 
+arm-none-eabi-size   nucleo_test.elf 
+arm-none-eabi-objdump -h -S  nucleo_test.elf  > "nucleo_test.list"
+arm-none-eabi-objcopy  -O binary  nucleo_test.elf  "nucleo_test.bin"
+   text	   data	    bss	    dec	    hex	filename
+  68828	    328	  21872	  91028	  16394	nucleo_test.elf
+Finished building: default.size.stdout
+ 
+Finished building: nucleo_test.bin
+ 
+Finished building: nucleo_test.list
+ 
+
+17:40:59 Build Finished. 0 errors, 0 warnings. (took 1s.299ms)
+

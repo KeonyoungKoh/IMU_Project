@@ -1,0 +1,13 @@
+/*
+ * ioif_i2c_mpu.h
+ *
+ *  Created on: 2022. 5. 31.
+ *      Author: keonyoung
+ */
+
+#ifndef INC_IOIF_I2C_MPU_H_
+#define INC_IOIF_I2C_MPU_H_
+
+
+
+#endif /* INC_IOIF_I2C_MPU_H_ */

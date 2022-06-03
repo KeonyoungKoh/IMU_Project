@@ -1,0 +1,13 @@
+/*
+ * mpu9250_regmap.h
+ *
+ *  Created on: 2022. 5. 31.
+ *      Author: keonyoung
+ */
+
+#ifndef INC_MPU9250_REGMAP_H_
+#define INC_MPU9250_REGMAP_H_
+
+
+
+#endif /* INC_MPU9250_REGMAP_H_ */

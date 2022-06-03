@@ -1,0 +1,11 @@
+himu.acc[0]
+himu.acc[1]
+himu.acc[2]
+himu.gyr[0]
+himu.gyr[1]
+himu.gyr[2]
+himu.mag[0]
+himu.mag[1]
+himu.mag[2]
+roll
+pitch
